@@ -54,7 +54,6 @@ char **tok_inputstr(char *inputstr, char *fraginputstr[])
 		write(1, "\n", 1);
 		exit(0);
 	}
-	free(inputstr);
 	return (fraginputstr);
 }
 
@@ -68,6 +67,8 @@ char **tok_inputstr(char *inputstr, char *fraginputstr[])
 int create_process(char *fraginputstr[], char *const envp[])
 {
 	pid_t my_pid = 1;
+	int u = 0;
+	char *arr[] = {NULL};
 
 	my_pid = fork();
 	if (my_pid == -1)
@@ -77,9 +78,18 @@ int create_process(char *fraginputstr[], char *const envp[])
 	}
 	else if (my_pid == 0)
 	{
-		if (execve(fraginputstr[0], fraginputstr, envp) != -1)
+		while (fraginputstr[u] != NULL)
+		{
+			u++;
+		}
+		if (u == 1)
+		{
+			if (execve(fraginputstr[0], arr, envp) < 0)
+				perror("./hsh");
+		}
+		else
+			if (execve(fraginputstr[0], fraginputstr, envp) < 0)
 			perror("./hsh");
-		free(fraginputstr);
 		exit(0);
 	}
 	else
