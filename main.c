@@ -67,6 +67,8 @@ int create_process(char *fraginputstr[], char *const envp[])
 	}
 	else if (my_pid == 0)
 	{
+		if (fraginputstr[0] == NULL || strlen(fraginputstr[0]) == 0)
+			exit(0);
 		if (execve(fraginputstr[0], fraginputstr, envp) < 0)
 			perror("./hsh");
 		exit(0);
