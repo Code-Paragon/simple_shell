@@ -8,7 +8,7 @@ int create_process(char *fraginputstr[], char *const envp[]);
  */
 int main(void)
 {
-	char *inputstr, *const envp[] = {NULL};
+	char *inputstr = NULL, *const envp[] = {NULL};
 	char *fraginputstr[1000];
 	size_t len = 100;
 	char delim[] = " \n\t";
