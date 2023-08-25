@@ -8,8 +8,9 @@ int create_process(char *fraginputstr[], char *const envp[]);
  */
 int main(void)
 {
-	char inputstr[1000], *const envp[] = {NULL};
+	char *inputstr, *const envp[] = {NULL};
 	char *fraginputstr[1000];
+	size_t len = 100;
 
 	while (1)
 	{
@@ -23,7 +24,7 @@ int main(void)
 			if (Firstwrite < 0)
 				perror("write failed");
 		}
-		nread = read(0, inputstr, sizeof(inputstr));
+		nread = getline(&inputstr, &len, stdin);
 		if (nread > 0)
 		{
 			y = 0;
