@@ -17,7 +17,6 @@ int main(void)
 
 	while (1)
 	{
-		int i;
 		if (isatty(STDIN_FILENO) || isatty(STDOUT_FILENO))
 		{
 			Firstwrite = write(1, "($) ", 4);
@@ -28,7 +27,6 @@ int main(void)
 		if (nread > 0)
 		{
 			inputstr[nread] = '\0';
-			printf("Input read: %s\n", inputstr);
 			y = 0;
 			fraginputstr[y] = strtok(inputstr, delim);
 			while (fraginputstr[y] != NULL)
@@ -36,11 +34,6 @@ int main(void)
 				y++;
 				fraginputstr[y] = strtok(NULL, delim);
 			}
-			
-			for (i = 0; i < y; i++)
-            {
-                printf("Fragment %d: %s\n", i, fraginputstr[i]);
-            }
 		}
 		else /* Check for custom EOF i.e Crtl+D */
 		{
@@ -65,8 +58,6 @@ int main(void)
 int create_process(char *fraginputstr[], char *const envp[])
 {
 	pid_t my_pid = 1;
-	int u = 0;
-	char *arr[] = {NULL};
 
 	my_pid = fork();
 	if (my_pid == -1)
@@ -76,16 +67,7 @@ int create_process(char *fraginputstr[], char *const envp[])
 	}
 	else if (my_pid == 0)
 	{
-		while (fraginputstr[u] != NULL)
-		{
-			u++;
-		}
-		if (u == 1)
-		{
-			if (execve(fraginputstr[0], arr, envp) < 0)
-				perror("./hsh");
-		}
-		else if (execve(fraginputstr[0], fraginputstr, envp) < 0)
+		if (execve(fraginputstr[0], fraginputstr, envp) < 0)
 			perror("./hsh");
 		exit(0);
 	}
