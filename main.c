@@ -1,6 +1,7 @@
 #include "main.h"
 int create_process(char *fraginputstr[], char *const envp[]);
 char **tok_inputstr(char *inputstr, char *fraginputstr[]);
+
 /**
  * main - a very simple shell
  *
@@ -19,9 +20,9 @@ int main(void)
 	return (0);
 }
 /**
- * tok_inputstr - prints prompt and tokenise inputstr
- * @inputstr: input string
- * @fraginputstr: array of input string
+ * tok_inputstr - prints prompt and tokenise inputstr.
+ * @inputstr: input string.
+ * @fraginputstr: array of input string.
  *
  * Return: fraginputstr on success
  */
