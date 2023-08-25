@@ -5,13 +5,13 @@
  *
  * Return: 0 when successful
  */
-int main(int __attribute__((unused)) ac, char __attribute__((unused)) **av, char **env)
+int main(int __attribute__((unused)) ac, char __attribute__((unused)) * *av, char **env)
 {
 	char *inputstr = NULL;
 	char *fraginputstr[100];
 	size_t len = 0;
 	char delim[] = " ";
-	int i, j, status ;
+	int i, j, status, k;
 	ssize_t Firstwrite, nread;
 	pid_t my_pid;
 
@@ -19,7 +19,7 @@ int main(int __attribute__((unused)) ac, char __attribute__((unused)) **av, char
 	{
 		if (isatty(STDIN_FILENO))
 		{
-			Firstwrite = write(1, "($) ", 4);
+			Firstwrite = write(1, "#cisfun$ ", 10);
 			if (Firstwrite < 0)
 				perror("write failed");
 		}
@@ -36,13 +36,12 @@ int main(int __attribute__((unused)) ac, char __attribute__((unused)) **av, char
 				inputstr[i] = 0;
 			i++;
 		}
-		
+
 		j = 0;
 		fraginputstr[j] = strtok(inputstr, delim);
 		while (fraginputstr[j])
 		{
-			j++;
-			fraginputstr[j] = strtok(NULL, delim);
+			fraginputstr[++j] = strtok(NULL, delim);
 		}
 
 		my_pid = fork();
@@ -60,6 +59,11 @@ int main(int __attribute__((unused)) ac, char __attribute__((unused)) **av, char
 		else
 		{
 			wait(&status);
+		}
+
+		for (k = 0; k <= j; k++)
+		{
+			fraginputstr[k] = NULL; 
 		}
 	}
 	return (0);
