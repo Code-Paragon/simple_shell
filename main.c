@@ -36,14 +36,13 @@ int main(void)
 		}
 		else /* Check for custom EOF i.e Crtl+D */
 		{
-			free(inputstr);
 			write(1, "\n", 1);
 			exit(0);
 		}
-		
+
 		if (create_process(fraginputstr, envp) != 0)
-			perror("./hsh")
-		else 
+			perror("./hsh");
+		else
 			wait(NULL);
 	}
 	return (0);
