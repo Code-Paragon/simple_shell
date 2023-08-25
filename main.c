@@ -17,7 +17,7 @@ int main(void)
 
 	while (1)
 	{
-		if (isatty(STDIN_FILENO) || isatty(STDOUT_FILENO))
+		if (isatty(STDIN_FILENO))
 		{
 			Firstwrite = write(1, "($) ", 4);
 			if (Firstwrite < 0)
