@@ -9,14 +9,15 @@ int create_process(char *fraginputstr[], char *const envp[]);
 int main(void)
 {
 	char *inputstr = NULL, *const envp[] = {NULL};
-	char *fraginputstr[1000];
-	size_t len = 100;
+	char *fraginputstr[100];
+	size_t len = 0;
 	char delim[] = " \n\t";
 	int y = 0, nread;
 	ssize_t Firstwrite;
 
 	while (1)
 	{
+		int i;
 		if (isatty(STDIN_FILENO))
 		{
 			Firstwrite = write(1, "($) ", 4);
@@ -37,13 +38,24 @@ int main(void)
 		}
 		else /* Check for custom EOF i.e Crtl+D */
 		{
+			free(inputstr);
 			exit(0);
 		}
 
 		if (create_process(fraginputstr, envp) != 0)
+		{
 			perror("./hsh");
+			free(inputstr);
+		}
+
 		else
+		{
+			for (i = 0; i < y; i++)
+			{
+				free(fraginputstr[i]);
+			}
 			wait(NULL);
+		}
 	}
 	return (0);
 }
