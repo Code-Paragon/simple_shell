@@ -1,6 +1,5 @@
 #include "main.h"
 int create_process(char *fraginputstr[], char *const envp[]);
-char **tok_inputstr(char *inputstr, char *fraginputstr[]);
 
 /**
  * main - a very simple shell
@@ -14,48 +13,40 @@ int main(void)
 
 	while (1)
 	{
-		tok_inputstr(inputstr, fraginputstr);
-		create_process(fraginputstr, envp);
+		char delim[] = " \n\t";
+		int y = 0, nread;
+		ssize_t Firstwrite;
+
+		if (isatty(STDIN_FILENO) || isatty(STDOUT_FILENO))
+		{
+			Firstwrite = write(1, "($) ", 4);
+			if (Firstwrite < 0)
+				perror("write failed");
+		}
+		nread = read(0, inputstr, sizeof(inputstr));
+		if (nread > 0)
+		{
+			y = 0;
+			fraginputstr[y] = strtok(inputstr, delim);
+			while (fraginputstr[y] != NULL)
+			{
+				y++;
+				fraginputstr[y] = strtok(NULL, delim);
+			}
+		}
+		else /* Check for custom EOF i.e Crtl+D */
+		{
+			free(inputstr);
+			write(1, "\n", 1);
+			exit(0);
+		}
+		
+		if (create_process(fraginputstr, envp) != 0)
+			perror("./hsh")
+		else 
+			wait(NULL);
 	}
 	return (0);
-}
-/**
- * tok_inputstr - prints prompt and tokenise inputstr.
- * @inputstr: input string.
- * @fraginputstr: array of input string.
- *
- * Return: fraginputstr on success
- */
-char **tok_inputstr(char *inputstr, char *fraginputstr[])
-{
-	char delim[] = " \n\t";
-	int y = 0, nread;
-	ssize_t Firstwrite;
-
-	if (isatty(STDIN_FILENO) || isatty(STDOUT_FILENO))
-	{
-		Firstwrite = write(1, "($) ", 4);
-		if (Firstwrite < 0)
-			perror("write failed");
-	}
-	nread = read(0, inputstr, sizeof(inputstr));
-	if (nread > 0)
-	{
-		y = 0;
-		fraginputstr[y] = strtok(inputstr, delim);
-		while (fraginputstr[y] != NULL)
-		{
-			y++;
-			fraginputstr[y] = strtok(NULL, delim);
-		}
-	}
-	else /* Check for custom EOF i.e Crtl+D */
-	{
-		free(inputstr);
-		write(1, "\n", 1);
-		exit(0);
-	}
-	return (fraginputstr);
 }
 
 /**
@@ -88,12 +79,10 @@ int create_process(char *fraginputstr[], char *const envp[])
 			if (execve(fraginputstr[0], arr, envp) < 0)
 				perror("./hsh");
 		}
-		else
-			if (execve(fraginputstr[0], fraginputstr, envp) < 0)
+		else if (execve(fraginputstr[0], fraginputstr, envp) < 0)
 			perror("./hsh");
 		exit(0);
 	}
-	else
-		wait(NULL);
+
 	return (0);
 }
