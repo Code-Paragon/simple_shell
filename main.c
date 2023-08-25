@@ -10,13 +10,10 @@ int main(void)
 {
 	char *inputstr, *const envp[] = {NULL};
 	char *fraginputstr[1000];
-<<<<<<< HEAD
 	size_t len = 100;
-=======
 	char delim[] = " \n\t";
 	int y = 0, nread;
 	ssize_t Firstwrite;
->>>>>>> c3342d5b6ded2bc74012df4e0f3a2084c84a2b91
 
 	while (1)
 	{
