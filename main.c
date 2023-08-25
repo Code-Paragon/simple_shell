@@ -10,13 +10,13 @@ int main(void)
 {
 	char inputstr[1000], *const envp[] = {NULL};
 	char *fraginputstr[1000];
+	char delim[] = " \n\t";
+	int y = 0, nread;
+	ssize_t Firstwrite;
 
 	while (1)
 	{
-		char delim[] = " \n\t";
-		int y = 0, nread;
-		ssize_t Firstwrite;
-
+		int i;
 		if (isatty(STDIN_FILENO) || isatty(STDOUT_FILENO))
 		{
 			Firstwrite = write(1, "($) ", 4);
@@ -26,6 +26,8 @@ int main(void)
 		nread = read(0, inputstr, sizeof(inputstr));
 		if (nread > 0)
 		{
+			inputstr[nread] = '\0';
+			printf("Input read: %s\n", inputstr);
 			y = 0;
 			fraginputstr[y] = strtok(inputstr, delim);
 			while (fraginputstr[y] != NULL)
@@ -33,10 +35,14 @@ int main(void)
 				y++;
 				fraginputstr[y] = strtok(NULL, delim);
 			}
+			
+			for (i = 0; i < y; i++)
+            {
+                printf("Fragment %d: %s\n", i, fraginputstr[i]);
+            }
 		}
 		else /* Check for custom EOF i.e Crtl+D */
 		{
-			write(1, "\n", 1);
 			exit(0);
 		}
 
