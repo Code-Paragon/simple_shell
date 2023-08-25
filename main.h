@@ -19,5 +19,6 @@
 #include <sys/types.h>
 
 extern char **environ;
+int create_process(char *fraginputstr[], char *const envp[]);
 
 #endif
